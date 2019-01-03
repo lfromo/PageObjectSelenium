@@ -13,14 +13,15 @@ public class TestConfiguration {
     private static String URL;
 
 
-
     @DataProvider(name = "setEnvironmentDefault")
-    public static Iterator<Object[]> setEnvironment(){
-        List<Object[]> params = new ArrayList<>();
-        params.add(new Object[] {"CHROME", "https://www.phptravels.net/"});
-        //params.add(new Object[] {"IE11", "https://www.phptravels.net/"});
-        //params.add(new Object[] {"EDGE", "https://www.phptravels.net/"});
-        return params.iterator();
+    public static Object[][] setEnvironment(){
+
+        Object[][] params = new Object[][] {
+                {"CHROME", "https://www.phptravels.net"}
+                //{"IE11", "https://www.phptravels.net"},
+                //{"EDGE", "https://www.phptravels.net"}
+        };
+        return params;
     }
 
 
@@ -51,7 +52,7 @@ public class TestConfiguration {
         URL = url;
     }
 
-    public static String getUrl(){
+    public static String getURL(){
         return URL;
     }
 

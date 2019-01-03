@@ -1,6 +1,7 @@
 package Tests;
 
 import Base.BaseTest;
+import Base.TestConfiguration;
 import PageObjects.FeaturedCar;
 import PageObjects.FeaturedHotel;
 import PageObjects.FeaturedTour;
@@ -12,14 +13,14 @@ import org.testng.asserts.SoftAssert;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Test
+@Test(dataProvider = "setEnvironmentDefault", dataProviderClass = TestConfiguration.class)
 public class PHPTravels extends BaseTest {
+
 
     public PHPTravels(String driver, String url) {
         super(driver, url);
     }
 
-    @Test
     public void TestFeaturedTours()
     {
         PHPTravelsHome _home = new PHPTravelsHome();
@@ -34,7 +35,6 @@ public class PHPTravels extends BaseTest {
         softAssert.assertAll();
     }
 
-    @Test
     public void TestFeaturedCars()
     {
         PHPTravelsHome _home = new PHPTravelsHome();
@@ -53,7 +53,6 @@ public class PHPTravels extends BaseTest {
         softAssert.assertAll();
     }
 
-    @Test
     public void TestFeaturedHotels()
     {
         PHPTravelsHome _home = new PHPTravelsHome();
@@ -71,7 +70,6 @@ public class PHPTravels extends BaseTest {
         softAssert.assertAll();
     }
 
-    @Test
     public void PrintLastTwoTourNames()
     {
         PHPTravelsHome _home = new PHPTravelsHome();
@@ -83,7 +81,6 @@ public class PHPTravels extends BaseTest {
         System.console().writer().println(String.format("The last tour name is %s", _secondTolastTour.getTourName()));
     }
 
-    @Test
     public void ToursWithCostGreaterThan60()
     {
         PHPTravelsHome _home = new PHPTravelsHome();
@@ -96,7 +93,6 @@ public class PHPTravels extends BaseTest {
         });
     }
 
-    @Test
     public void CurrencyForAllHotels()
     {
         PHPTravelsHome _home = new PHPTravelsHome();
@@ -108,7 +104,6 @@ public class PHPTravels extends BaseTest {
         }
     }
 
-    @Test
     public void CarIsNotForFree()
     {
         PHPTravelsHome _home = new PHPTravelsHome();
@@ -118,7 +113,6 @@ public class PHPTravels extends BaseTest {
     }
 
 
-    @Test
     public void YourePickyArentYa()
     {
         PHPTravelsHome _home = new PHPTravelsHome();
