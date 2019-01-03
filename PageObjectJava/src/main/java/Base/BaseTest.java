@@ -4,37 +4,39 @@ import Support.Support;
 import org.openqa.selenium.WebDriver;
 
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.ITestContext;
+import org.testng.ITestResult;
+import org.testng.TestListenerAdapter;
 import org.testng.annotations.*;
+
+import java.util.Arrays;
 
 public abstract class BaseTest {
 
-    private final String _browserName;
-    protected final WebDriver _driver;
-    protected final String _url;
+    protected WebDriver driver;
 
-    @Factory(dataProvider = "setEnvironmentDefault", dataProviderClass = TestConfiguration.class)
-    public BaseTest(String driver, String url){
-        EnvironmentConfiguration _environment = new EnvironmentConfiguration(driver, url);
-        this._driver = _environment.getDriver();
-        this._url = url;
-        this._browserName = ((RemoteWebDriver) _driver).getCapabilities()
-                .getBrowserName().toUpperCase();
-
-        TestConfiguration.setDriver(_driver);
-        TestConfiguration.setUrl(_url);
-    }
-
-
-    @BeforeClass
+    @BeforeClass()
     public void classStartup(){
+        EnvironmentConfiguration _environment = new EnvironmentConfiguration(driver, url);
+        TestConfiguration.setDriver(_environment.getDriver());
+        TestConfiguration.setUrl(url);
+
         Support.LOGGER.info(String.format("--->EXECUTING TEST CLASS '%s' ON %s",
-                this.getClass().getCanonicalName(), _browserName));
+                this.getClass().getCanonicalName(), TestConfiguration.getBrowserName()));
     }
+
+
+    @BeforeTest
+    public void beforeTest(ITestContext testContext){
+        Support.LOGGER.info(String.format("--->EXECUTING TEST CLASS '%s' ON %s",
+                testContext.getName(), TestConfiguration.getBrowserName()));
+    }
+
 
     @AfterMethod
-    public void afterMethod(){
-        String _testName = "TestName";//tr.getName();
-        int _status = 1; //tr.getStatus();
+    public void afterMethod(ITestResult tr){
+        String _testName = tr.getName();
+        int _status = tr.getStatus();
 
         switch (_status){
             case 1: //Success
@@ -43,10 +45,10 @@ public abstract class BaseTest {
             case 2: //Failure
                 Support.LOGGER.error(String.format("Test '%s' Failed", _testName));
                 Support.takeScreenshot(_testName);
-                _driver.navigate().to(_url); //Ensures a clean start in case of fatal failures in the tested web app.
+                TestConfiguration.getDriver().navigate().to(TestConfiguration.getURL()); //Ensures a clean start in case of fatal failures in the tested web app.
                 break;
             default:
-                Support.LOGGER.warn(String.format("Test '%s' Finished. Reason: '%d'", _testName, 1));
+                Support.LOGGER.warn(String.format("Test '%s' Finished. Reason: '%d'", _testName, _status));
 
         }
     }
@@ -55,7 +57,7 @@ public abstract class BaseTest {
     @AfterClass
     public void classTearDown(){
         Support.LOGGER.info(String.format("--->FINISHED EXECUTING TEST CLASS '%s' ON %s",
-                this.getClass().getCanonicalName(), _browserName));
+                this.getClass().getCanonicalName(), TestConfiguration.getBrowserName()));
     }
 
 

@@ -1,6 +1,7 @@
 package Base;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.DataProvider;
 
 import java.util.ArrayList;
@@ -14,14 +15,12 @@ public class TestConfiguration {
 
 
     @DataProvider(name = "setEnvironmentDefault")
-    public static Object[][] setEnvironment(){
-
-        Object[][] params = new Object[][] {
-                {"CHROME", "https://www.phptravels.net"}
-                //{"IE11", "https://www.phptravels.net"},
-                //{"EDGE", "https://www.phptravels.net"}
-        };
-        return params;
+    public static Iterator<Object[]> setEnvironment(){
+        List<Object[]> params = new ArrayList<>();
+        params.add(new Object[] { "CHROME", "https://www.phptravels.net"});
+        //params.add(new Object[] { "IE11", "https://www.phptravels.net"});
+        //params.add(new Object[] { "EDGE", "https://www.phptravels.net"});
+        return params.iterator();
     }
 
 
@@ -54,6 +53,10 @@ public class TestConfiguration {
 
     public static String getURL(){
         return URL;
+    }
+
+    public static String getBrowserName(){
+        return ((RemoteWebDriver) DRIVER).getCapabilities().getBrowserName().toUpperCase();
     }
 
 }
