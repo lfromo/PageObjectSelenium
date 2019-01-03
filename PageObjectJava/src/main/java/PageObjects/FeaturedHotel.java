@@ -38,7 +38,7 @@ public class FeaturedHotel {
         return webItem.findElements(hotelRate).size();
     }
 
-    public int fetHotelMaxAllowedRate()
+    public int getHotelMaxAllowedRate()
     {
         return webItem.findElements(hotelMaxAllowedRate).size();
     }

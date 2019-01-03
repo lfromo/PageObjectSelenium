@@ -13,7 +13,7 @@ import org.testng.asserts.SoftAssert;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Test(dataProvider = "setEnvironmentDefault", dataProviderClass = TestConfiguration.class)
+@Test
 public class PHPTravels extends BaseTest {
 
 
