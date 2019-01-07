@@ -16,7 +16,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.util.Objects;
 
-public class EnvironmentConfiguration<T extends MutableCapabilities> {
+public class BrowserConfiguration<T extends MutableCapabilities> {
 
     private T configOpts = null;
     private boolean isRemote = false;
@@ -31,21 +31,21 @@ public class EnvironmentConfiguration<T extends MutableCapabilities> {
     private final String REMOTE = "REMOTE";
 
 
-    public EnvironmentConfiguration(String browserName, String baseUrl){
+    public BrowserConfiguration(String browserName, String baseUrl){
         this.browser = browserName;
         this.url = baseUrl;
     }
 
-    public EnvironmentConfiguration(Browser browser, String baseUrl){
+    public BrowserConfiguration(Browser browser, String baseUrl){
         this.browser = browser.name();
         this.url = baseUrl;
     }
 
-    public EnvironmentConfiguration(T browserConfigurationOptions, String baseUrl){
+    public BrowserConfiguration(T browserConfigurationOptions, String baseUrl){
         this(browserConfigurationOptions, baseUrl, false);
     }
 
-    public EnvironmentConfiguration(T browserConfigurationOptions, String baseUrl, boolean isRemote){
+    public BrowserConfiguration(T browserConfigurationOptions, String baseUrl, boolean isRemote){
         this.browser = getInstanceOf(browserConfigurationOptions);
         this.configOpts = browserConfigurationOptions;
         this.url = baseUrl;
@@ -105,8 +105,8 @@ public class EnvironmentConfiguration<T extends MutableCapabilities> {
             return drv;
 
         }catch (Exception ex){
-            Support.LOGGER.fatal(String.format("An error occurred configuring '%s' web driver", this.browser), ex.getCause());
-            return null;
+            Support.LOGGER.fatal(String.format("An error occurred configuring '%s' web driver", this.browser), ex.getMessage());
+            throw new WebDriverException(ex.getMessage());
         }
 
     }

@@ -4,7 +4,9 @@ import java.util.Properties;
 
 public class PropertiesHandler {
 
-    public Properties getPropertiesFromFile(String propertiesFilePath){
+
+
+    public Properties getProperties(String propertiesFilePath){
 
         return new Properties();
     }

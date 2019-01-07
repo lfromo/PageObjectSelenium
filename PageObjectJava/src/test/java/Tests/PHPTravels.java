@@ -73,10 +73,10 @@ public class PHPTravels extends BaseTest {
         PHPTravelsHome _home = new PHPTravelsHome();
         List<FeaturedTour> trips = _home.getFeaturedTours();
         FeaturedTour _lastTour = trips.get(trips.size() - 1);
-        System.console().writer().println(String.format("The last tour name is %s", _lastTour.getTourName()));
+        System.out.println(String.format("The last tour name is %s", _lastTour.getTourName()));
         trips.remove(_lastTour);
         FeaturedTour _secondTolastTour = trips.get(trips.size() - 1);
-        System.console().writer().println(String.format("The last tour name is %s", _secondTolastTour.getTourName()));
+        System.out.println(String.format("The last tour name is %s", _secondTolastTour.getTourName()));
     }
 
     @Test
@@ -86,9 +86,9 @@ public class PHPTravels extends BaseTest {
         List<FeaturedTour> trips = _home.getFeaturedTours();
         List<FeaturedTour> selectedTrips = trips.stream().filter(trip -> trip.getPrice() > 60).collect(Collectors.toList());
         selectedTrips.stream().forEach(trip -> {
-            System.console().writer().println(String.format("Trip Name: %s", trip.getTourName()));
-            System.console().writer().println(String.format("Trip Cost: %s", trip.getPrice()));
-            System.console().writer().println("------------------------------");
+            System.out.println(String.format("Trip Name: %s", trip.getTourName()));
+            System.out.println(String.format("Trip Cost: %s", trip.getPrice()));
+            System.out.println("------------------------------");
         });
     }
 
@@ -119,8 +119,8 @@ public class PHPTravels extends BaseTest {
         PHPTravelsHome _home = new PHPTravelsHome();
         List<FeaturedTour> trips = _home.getFeaturedTours();
         FeaturedTour foundTour = trips.stream().filter(trip -> trip.getNumberOfStars() > 3)
-                .findFirst()
-                .orElseThrow(AssertionError::new);
+            .findFirst()
+            .orElseThrow(AssertionError::new);
         foundTour.bookNow();
     }
 

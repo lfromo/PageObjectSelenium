@@ -1,8 +1,8 @@
 package Support;
 
 import Base.TestConfiguration;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
 
 import java.io.*;
@@ -14,7 +14,7 @@ import java.util.Properties;
 
 public class Support {
 
-    public static final Logger LOGGER = LogManager.getLogger(Support.class);
+    public static final Logger LOGGER = LogManager.getRootLogger();
     public static final String SCREENSHOTS_PATH = "C:\\source\\ScreenShots\\General";
 
     public static Path takeScreenshot(String fileName){

@@ -56,7 +56,11 @@ public class TestConfiguration {
     }
 
     public static String getBrowserName(){
-        return ((RemoteWebDriver) DRIVER).getCapabilities().getBrowserName().toUpperCase();
+        return ((RemoteWebDriver) DRIVER).getCapabilities().getBrowserName();
+    }
+
+    public static void quitDriver(){
+        DRIVER.quit();
     }
 
 }

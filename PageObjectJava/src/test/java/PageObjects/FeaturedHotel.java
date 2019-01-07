@@ -53,7 +53,7 @@ public class FeaturedHotel {
     {
         WebElement _priceItm = webItem.findElement(hotelCurrencyAndPrice);
         String _priceStr = Support.extractTextWithJavaScript(_priceItm);
-        String _priceNoSymbolStr = _priceStr.split("$")[1];
+        String _priceNoSymbolStr = _priceStr.substring(_priceStr.indexOf("$") + 1);
         return Float.parseFloat(_priceNoSymbolStr);
     }
 

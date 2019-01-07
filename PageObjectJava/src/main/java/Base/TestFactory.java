@@ -1,33 +1,39 @@
 package Base;
 
-import org.testng.TestNG;
 import org.testng.annotations.Factory;
 import org.testng.xml.XmlClass;
 import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
 
 import java.util.Arrays;
+import java.util.List;
 
 
 public class TestFactory {
 
-    private final Class[] testClassesToExecute;
+    private Class[] testClassesToExecute;
 
-    public TestFactory(Class... testClasses){
-        this.testClassesToExecute = testClasses;
-        TestNG ng = new TestNG();
-        ng.setTestClasses(testClassesToExecute);
-        XmlSuite supersuite = new XmlSuite();
-        XmlTest test = supersuite.getTests().get(0);
-        XmlClass clz = test.getClasses().get(0);
 
+
+
+    //@Factory(dataProvider = "setEnvironmentDefault", dataProviderClass = TestConfiguration.class)
+    public TestFactory(String browserName, String url){
+        List<Class> classes = Arrays.asList(testClassesToExecute);
+        XmlSuite suite = new XmlSuite();
+        suite.getParameters();
+        List<XmlTest> tests = suite.getTests();
+        tests.stream().forEach(test -> {
+            List<XmlClass> testClasses = test.getClasses();
+            testClasses.stream().forEach(clz -> {
+                if(!clz.getName().equals("TestFactory"))
+                    classes.add(clz.getSupportClass());
+            });
+        });
 
     }
 
-
-    @Factory(dataProvider = "setEnvironmentDefault", dataProviderClass = TestConfiguration.class)
-    public void environmentFactory(String driver, String url){
-        EnvironmentConfiguration _environment = new EnvironmentConfiguration(driver, url);
+    private void BrowserConfigurationFactory(String driver, String url){
+        BrowserConfiguration _environment = new BrowserConfiguration(driver, url);
         TestConfiguration.setDriver(_environment.getDriver());
         TestConfiguration.setUrl(url);
 
@@ -41,8 +47,6 @@ public class TestFactory {
                 e.printStackTrace();
             }
         });
-
-
 
     }
 }
