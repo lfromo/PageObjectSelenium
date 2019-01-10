@@ -4,47 +4,16 @@ import Base.TestConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
+import ru.yandex.qatools.ashot.AShot;
+import ru.yandex.qatools.ashot.Screenshot;
+import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Date;
-import java.util.Properties;
+import java.util.*;
 
 public class Support {
 
     public static final Logger LOGGER = LogManager.getRootLogger();
-    public static final String SCREENSHOTS_PATH = "C:\\source\\ScreenShots\\General";
-
-    public static Path takeScreenshot(String fileName){
-        Properties properties = new Properties();
-        try {
-            properties.load(new FileReader("resources\\general.properties"));
-        } catch (IOException e) {
-            LOGGER.fatal("Could not load the properties file", e.getCause());
-        }
-
-        Date currentDate = new Date();
-        String baseUrl = properties.getProperty("screenshotPath", SCREENSHOTS_PATH);
-        Path baseDir = Paths.get(baseUrl);
-
-        TakesScreenshot photographer = (TakesScreenshot) TestConfiguration.getDriver();
-        File screenshot = photographer.getScreenshotAs(OutputType.FILE);
-        boolean renamed = screenshot.renameTo(new File(fileName + "_" +  currentDate.getTime() +".png"));
-
-        if(!renamed)
-            LOGGER.warn(String.format("The screenshot could not be renamed. The file name is:'%s'", screenshot.getName()));
-
-        try {
-            if(!Files.exists(baseDir))
-                Files.createDirectory(baseDir);
-            return Files.move(screenshot.toPath(), baseDir);
-        } catch (IOException e) {
-           LOGGER.fatal("There was an error saving the screenshot", e.getCause());
-           return null;
-        }
-    }
+    private static final List<Screenshot> SAVED_SCREENSHOTS = new ArrayList<>();
 
     public static void javaScriptClick(WebElement element){
         getJavaScriptExecutor().executeScript("arguments[0].click();", element);
@@ -60,6 +29,22 @@ public class Support {
         return (JavascriptExecutor) TestConfiguration.getDriver();
     }
 
+    public static void takeScreenshot(){
+        takeScreenshot(null);
+    }
 
+    public static void takeScreenshot(WebElement webItem){
+        AShot shotInstance = new AShot().shootingStrategy(ShootingStrategies.viewportPasting(1000));
+
+        Screenshot shot = Objects.isNull(webItem) ? shotInstance.takeScreenshot(TestConfiguration.getDriver()) :
+                shotInstance.takeScreenshot(TestConfiguration.getDriver(), webItem);
+        SAVED_SCREENSHOTS.add(shot);
+    }
+
+    public static List<Screenshot> getStoredScreenshots(){
+        List allScreenshots = SAVED_SCREENSHOTS;
+        SAVED_SCREENSHOTS.clear();
+        return allScreenshots;
+    }
 
 }

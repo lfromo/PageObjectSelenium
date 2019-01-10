@@ -49,12 +49,12 @@ public class FeaturedHotel {
         return Support.extractTextWithJavaScript(_currencyItm.findElement(By.tagName("small")));
     }
 
-    public float getHotelPrice()
+    public double getHotelPrice()
     {
         WebElement _priceItm = webItem.findElement(hotelCurrencyAndPrice);
         String _priceStr = Support.extractTextWithJavaScript(_priceItm);
-        String _priceNoSymbolStr = _priceStr.substring(_priceStr.indexOf("$") + 1);
-        return Float.parseFloat(_priceNoSymbolStr);
+        String _priceNoSymbolStr = _priceStr.trim().substring(_priceStr.indexOf(" ") + 4);
+        return Double.parseDouble(_priceNoSymbolStr);
     }
 
     public HotelDetails bookNow()

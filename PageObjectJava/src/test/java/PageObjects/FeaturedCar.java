@@ -36,7 +36,7 @@ public class FeaturedCar extends BasePage {
     public float getCarPrice()
     {
         String txt = currencyAndPrice.getText();
-        txt = txt.substring(txt.indexOf("$") + 1);
+        txt = txt.substring(txt.indexOf(" ") + 2);
         return Float.parseFloat(txt);
     }
 
