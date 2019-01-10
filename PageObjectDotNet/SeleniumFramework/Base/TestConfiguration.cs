@@ -67,7 +67,7 @@ namespace SeleniumFramework.Base
                         };
                         _driver = new EdgeDriver(_edgeOpts);
                         break;
-                    default: throw new Exception($"{_browser} is not supported.");
+                    default: throw new WebDriverException($"{_browser} is not supported.");
                 }
                 _driver.Manage().Window.Maximize();
                 _drvInstances.Add(_driver);
