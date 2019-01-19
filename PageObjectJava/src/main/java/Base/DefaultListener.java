@@ -21,12 +21,12 @@ public class DefaultListener implements ITestListener {
     @Override
     public void onTestSuccess(ITestResult result) {
         System.out.println(String.format("--->TEST '%s' PASSED", result.getName()));
-        addScreenshotsToReport(result);
     }
 
     @Override
     public void onTestFailure(ITestResult result) {
         System.out.println(String.format("--->TEST '%s' FAILED", result.getName()));
+        Support.takeScreenshot();
         addScreenshotsToReport(result);
 
         //Ensures a clean start in case of fatal failures happen in the tested web app.
@@ -45,12 +45,17 @@ public class DefaultListener implements ITestListener {
 
     @Override
     public void onStart(ITestContext context) {
-        System.out.println("PRINT FROM LISTENER: onStart");
+        String browser = context.getCurrentXmlTest().getParameter("Browser");
+        String url = context.getCurrentXmlTest().getParameter("Url");
+        BrowserConfiguration _configuration = new BrowserConfiguration(browser, url);
+        TestConfiguration.setDriver(_configuration.getDriver());
+        TestConfiguration.setUrl(url);
     }
 
     @Override
     public void onFinish(ITestContext context) {
-        System.out.println("PRINT FROM LISTENER: onFinish");
+        Support.clearScreenshotsList();
+        TestConfiguration.getDriver().quit();
     }
 
 
@@ -66,10 +71,10 @@ public class DefaultListener implements ITestListener {
                 if(!Files.exists(baseDir))
                     Files.createDirectory(baseDir);
                 ImageIO.write(shot.getImage(),"png", imgFile);
-                Reporter.log(String.format("<a href=\"%s\" title=\"%s\"><img src=\"%1$s\" height='100' width='100'/></a>", imgFile.getPath(), result.getName()));
+                Reporter.log(String.format("<a href=\"%s\" title=\"%s\"><img src=\"%1$s\" height='100' width='150'/></a>", imgFile.getPath(), result.getName()));
             } catch (IOException e) {
-                Support.LOGGER.fatal("There was an error saving the screenshot for Test %s:\n %s",
-                        result.getName(), e.getMessage());
+                Support.LOGGER.fatal(String.format("There was an error saving the screenshot for Test %s:\n %s",
+                        result.getName(), e.getMessage()));
             }
         });
     }

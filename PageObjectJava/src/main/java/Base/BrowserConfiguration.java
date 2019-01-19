@@ -36,11 +36,6 @@ public class BrowserConfiguration<T extends MutableCapabilities> {
         this.url = baseUrl;
     }
 
-    public BrowserConfiguration(Browser browser, String baseUrl){
-        this.browser = browser.name();
-        this.url = baseUrl;
-    }
-
     public BrowserConfiguration(T browserConfigurationOptions, String baseUrl){
         this(browserConfigurationOptions, baseUrl, false);
     }
@@ -75,7 +70,7 @@ public class BrowserConfiguration<T extends MutableCapabilities> {
             throw new WebDriverException("configuration options are required for a remote web driver");
 
         try{
-            switch (this.browser){
+            switch (this.browser.toUpperCase()){
                 case REMOTE:
                     drv = new RemoteWebDriver(configOptions);
                     break;
@@ -93,7 +88,8 @@ public class BrowserConfiguration<T extends MutableCapabilities> {
                     drv = areThereConfigOptions ? new FirefoxDriver((FirefoxOptions) configOptions) : new FirefoxDriver();
                     break;
                 default:
-                    throw new WebDriverException(String.format("The driver for %s is not supported", this.browser));
+                    String msg = "\nSupported drivers are EDGE, IE11, CHROME and FIREFOX";
+                    throw new WebDriverException(String.format("The driver for %s is not supported.%s", this.browser, msg));
             }
 
             //TODO Consider removing the next two code lines and just return the driver.
@@ -122,7 +118,7 @@ public class BrowserConfiguration<T extends MutableCapabilities> {
             return EDGE;
         if(configOptions instanceof FirefoxOptions)
             return FIREFOX;
-        throw new WebDriverException("The provided config options are from a non-supported browser");
+        throw new WebDriverException("The provided config options are for a non-supported browser");
     }
 
 }

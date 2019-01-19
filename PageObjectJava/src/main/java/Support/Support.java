@@ -42,9 +42,11 @@ public class Support {
     }
 
     public static List<Screenshot> getStoredScreenshots(){
-        List allScreenshots = SAVED_SCREENSHOTS;
+        return SAVED_SCREENSHOTS;
+    }
+
+    public static void clearScreenshotsList(){
         SAVED_SCREENSHOTS.clear();
-        return allScreenshots;
     }
 
 }
