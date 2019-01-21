@@ -10,7 +10,7 @@ import org.openqa.selenium.support.pagefactory.ElementLocatorFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PHPTravelsHome extends PHPTravelPage {
+public class PHPTravelsHome extends PHPTravelPageObject {
 
 
     private By featuredToursSection = By.cssSelector("div.vc_column-gap-30");

@@ -1,6 +1,6 @@
 package PageObjects;
 
-import Base.BasePage;
+import Base.BasePageObject;
 import Support.Support;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -8,7 +8,7 @@ import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 
-public class FeaturedCar extends BasePage {
+public class FeaturedCar extends BasePageObject {
 
     @FindBy(css = "i.fa-star")
     private List<WebElement> rate;

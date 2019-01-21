@@ -1,8 +1,8 @@
 package PageObjects;
 
-import Base.BasePage;
+import Base.BasePageObject;
 
-public class TourDetails extends BasePage {
+public class TourDetails extends BasePageObject {
 
 
 

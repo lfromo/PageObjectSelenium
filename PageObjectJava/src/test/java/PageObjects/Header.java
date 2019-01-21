@@ -1,6 +1,6 @@
 package PageObjects;
 
-import Base.BasePage;
+import Base.BasePageObject;
 
-public class Header extends BasePage {
+public class Header extends BasePageObject {
 }

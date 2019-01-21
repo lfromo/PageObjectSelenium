@@ -34,6 +34,7 @@ public class PHPTravels2 extends BaseTest {
             String hotelName = hotel.getHotelName();
             Assert.assertFalse(hotelName.isEmpty(), "No hotel name was found for one of the items");
             Assert.assertFalse(hotel.getHotelCurrency().isEmpty(), String.format("The currency for hotel '%s' was not found", hotelName));
+            Assert.fail("Forcing again the test to fail");
         }
     }
 

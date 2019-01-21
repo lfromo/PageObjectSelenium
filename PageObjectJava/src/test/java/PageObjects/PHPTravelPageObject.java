@@ -1,8 +1,8 @@
 package PageObjects;
 
-import Base.BasePage;
+import Base.BasePageObject;
 
-public abstract class PHPTravelPage extends BasePage {
+public abstract class PHPTravelPageObject extends BasePageObject {
 
     public Header getHeader(){
         return new Header();

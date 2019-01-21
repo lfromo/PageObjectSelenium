@@ -1,6 +1,6 @@
 package PageObjects;
 
-import Base.BasePage;
+import Base.BasePageObject;
 
-public class Footer extends BasePage {
+public class Footer extends BasePageObject {
 }

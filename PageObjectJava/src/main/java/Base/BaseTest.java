@@ -15,6 +15,8 @@ import java.nio.file.Paths;
 @Listeners({DefaultListener.class})
 public abstract class BaseTest{
 
+    protected final WebDriver _webdriver = TestConfiguration.getDriver();
+
     @BeforeClass
     public void classSetup(){
        Support.LOGGER.info(String.format("--->EXECUTING TEST CLASS '%s'<---",
