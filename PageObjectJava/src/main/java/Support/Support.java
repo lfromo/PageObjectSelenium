@@ -12,7 +12,7 @@ import java.util.*;
 
 public class Support {
 
-    public static final Logger LOGGER = LogManager.getRootLogger();
+    public static final Logger LOGGER = LogManager.getLogger("selenium");
     private static final List<Screenshot> SAVED_SCREENSHOTS = new ArrayList<>();
 
     public static void javaScriptClick(WebElement element){

@@ -75,8 +75,9 @@ public class PHPTravels1 extends BaseTest {
         List<FeaturedTour> selectedTrips = trips.stream().filter(trip -> trip.getPrice() > 60).collect(Collectors.toList());
         SoftAssert soft = new SoftAssert();
         selectedTrips.stream().forEach(trip -> {
-            soft.assertTrue(trip.getPrice() > 100, String.format("The trip '%s' cost is not greater than 60, costs '%s'", trip.getTourName(), trip.getPrice()));
+            soft.assertTrue(trip.getPrice() > 60, String.format("The trip '%s' cost is not greater than 60, costs '%s'", trip.getTourName(), trip.getPrice()));
         });
         soft.assertAll();
+        Assert.fail("Just forcing the test to fail xdxdxd");
     }
 }

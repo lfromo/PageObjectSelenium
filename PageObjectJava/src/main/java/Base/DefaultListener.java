@@ -15,19 +15,20 @@ public class DefaultListener implements ITestListener {
 
     @Override
     public void onTestStart(ITestResult result) {
-        System.out.println(String.format("--->EXECUTING TEST '%s'",  result.getName()));
+        Support.LOGGER.info(String.format("--->EXECUTING TEST '%s'",  result.getName()));
     }
 
     @Override
     public void onTestSuccess(ITestResult result) {
-        System.out.println(String.format("--->TEST '%s' PASSED", result.getName()));
+        Support.LOGGER.info(String.format("--->TEST '%s' PASSED", result.getName()));
     }
 
     @Override
     public void onTestFailure(ITestResult result) {
-        System.out.println(String.format("--->TEST '%s' FAILED", result.getName()));
+        Support.LOGGER.error(String.format("--->TEST '%s' FAILED", result.getName()));
         Support.takeScreenshot();
         addScreenshotsToReport(result);
+        Support.clearScreenshotsList();
 
         //Ensures a clean start in case of fatal failures happen in the tested web app.
         TestConfiguration.getDriver().navigate().to(TestConfiguration.getURL());
@@ -35,12 +36,12 @@ public class DefaultListener implements ITestListener {
 
     @Override
     public void onTestSkipped(ITestResult result) {
-        System.out.println(String.format("--->TEST '%s' SKIPPED", result.getName()));
+        Support.LOGGER.warn(String.format("--->TEST '%s' SKIPPED", result.getName()));
     }
 
     @Override
     public void onTestFailedButWithinSuccessPercentage(ITestResult result) {
-        System.out.println("PRINT FROM LISTENER: onTestFailedButWithinSuccessPercentage");
+        Support.LOGGER.warn(String.format("--->TEST '%s' FAILED BUT WITHIN SUCCESS PERCENTAGE", result.getName()));
     }
 
     @Override
@@ -50,12 +51,15 @@ public class DefaultListener implements ITestListener {
         BrowserConfiguration _configuration = new BrowserConfiguration(browser, url);
         TestConfiguration.setDriver(_configuration.getDriver());
         TestConfiguration.setUrl(url);
+        Support.LOGGER.info("*******STARTING TEST SUITE '" + context.getName().toUpperCase() +
+                "' ON " + TestConfiguration.getBrowserName().toUpperCase() + " DRIVER*******");
     }
 
     @Override
     public void onFinish(ITestContext context) {
-        Support.clearScreenshotsList();
         TestConfiguration.getDriver().quit();
+        Support.LOGGER.info("*******FINISHED TEST SUITE '" + context.getName().toUpperCase() +
+                "' ON " + TestConfiguration.getBrowserName().toUpperCase() + " DRIVER*******");
     }
 
 

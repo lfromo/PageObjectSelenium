@@ -17,14 +17,14 @@ public abstract class BaseTest{
 
     @BeforeClass
     public void classSetup(){
-       System.out.println(String.format("--->EXECUTING TEST CLASS '%s' ON %s<---",
-                this.getClass().getCanonicalName(), TestConfiguration.getBrowserName().toUpperCase()));
+       Support.LOGGER.info(String.format("--->EXECUTING TEST CLASS '%s'<---",
+                this.getClass().getCanonicalName()));
     }
 
     @AfterClass
     public void classTearDown(){
-        System.out.println(String.format("--->FINISHED EXECUTING TEST CLASS '%s' ON %s<---",
-                this.getClass().getCanonicalName(), TestConfiguration.getBrowserName().toUpperCase()));
+        Support.LOGGER.info(String.format("--->FINISHED EXECUTING TEST CLASS '%s'<---",
+                this.getClass().getCanonicalName()));
     }
 
 }
