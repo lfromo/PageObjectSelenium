@@ -32,7 +32,7 @@ public class BrowserConfiguration<T extends MutableCapabilities> {
 
 
     public BrowserConfiguration(String browserName, String baseUrl){
-        this.browser = browserName;
+        this.browser = browserName.toUpperCase();
         this.url = baseUrl;
     }
 
@@ -70,7 +70,7 @@ public class BrowserConfiguration<T extends MutableCapabilities> {
             throw new WebDriverException("configuration options are required for a remote web driver");
 
         try{
-            switch (this.browser.toUpperCase()){
+            switch (this.browser){
                 case REMOTE:
                     drv = new RemoteWebDriver(configOptions);
                     break;
@@ -89,12 +89,12 @@ public class BrowserConfiguration<T extends MutableCapabilities> {
                     break;
                 default:
                     String msg = "\nSupported drivers are EDGE, IE11, CHROME and FIREFOX";
-                    throw new WebDriverException(String.format("The driver for %s is not supported.%s", this.browser, msg));
+                    throw new WebDriverException(String.format("WebDriver for %s is not supported.%s", this.browser, msg));
             }
 
             //TODO Consider removing the next two code lines and just return the driver.
             // However, a proper environment is not defined just by the browser but also by the initial URL
-            // but this may cause problems with remote web drivers for mobile applications (Appium).
+            // but this may cause problems with remote web drivers testing mobile applications (i.e. Appium).
 
             drv.manage().window().maximize();
             drv.navigate().to(this.url);

@@ -22,7 +22,6 @@ public class FeaturedTour {
     @FindBy(css = "div.hotel-person span small")
     private WebElement labelCurrency;
 
-
     @FindBy(css = "div.hotel-person span")
     private WebElement labelPrice;
 
