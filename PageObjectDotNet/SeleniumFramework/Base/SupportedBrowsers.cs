@@ -2,8 +2,8 @@
 {
     public enum Browser
     {
-        //IE11,
-        //EDGE,
+        IE11,
+        EDGE,
         CHROME
     }
 }
