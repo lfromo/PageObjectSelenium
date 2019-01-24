@@ -15,12 +15,13 @@ import java.nio.file.Paths;
 @Listeners({DefaultListener.class})
 public abstract class BaseTest{
 
-    protected final WebDriver _webdriver = TestConfiguration.getDriver();
+    protected WebDriver _webdriver;
 
     @BeforeClass
     public void classSetup(){
        Support.LOGGER.info(String.format("--->EXECUTING TEST CLASS '%s'<---",
                 this.getClass().getCanonicalName()));
+        _webdriver = TestConfiguration.getDriver();
     }
 
     @AfterClass
