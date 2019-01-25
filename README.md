@@ -41,7 +41,12 @@ Applying the corresponding Selenium bindings, NUnit v3 along its corresponding T
 Please refer to the following links for more information on how to properly perform the framework setup.
 
 Browsers WebDriver Configurations:
-https://sites.google.com/a/chromium.org/chromedriver/getting-started
-https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/
-https://developer.mozilla.org/en-US/docs/Web/WebDriver
-https://www.seleniumhq.org/download/ <-----Look for "The Internet Explorer Driver Server" section in the page.
+
+--> https://sites.google.com/a/chromium.org/chromedriver/getting-started
+
+--> https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/
+
+--> https://developer.mozilla.org/en-US/docs/Web/WebDriver
+
+--> https://www.seleniumhq.org/download/
+Look for "The Internet Explorer Driver Server" section in the page.
