@@ -16,7 +16,7 @@ It is suggested to use Idea's IntelliJ as the IDE.
 
 ### USAGE: 
  The framework uses TestNG to execute the Test suite,  which uses an XML document to execute the Tests. A basic example is the following:
- 
+ ```
  <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Selenium/Java Framework Example Suite">
@@ -29,7 +29,7 @@ It is suggested to use Idea's IntelliJ as the IDE.
     </classes>
   </test>
 </suite>
-
+```
 The parameters can be removed from here and handled by the TEstNG plugin in the IDE to provide them along other configurations.
 
 ## PageObjectDotNet:
