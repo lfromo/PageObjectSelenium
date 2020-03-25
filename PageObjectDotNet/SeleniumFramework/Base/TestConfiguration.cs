@@ -2,6 +2,7 @@
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
+using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.IE;
 using System;
 using System.Collections;
@@ -66,6 +67,9 @@ namespace SeleniumFramework.Base
                             
                         };
                         _driver = new EdgeDriver(_edgeOpts);
+                        break;
+                    case "FIREFOX":
+                        _driver = new FirefoxDriver();
                         break;
                     default: throw new WebDriverException($"{_browser} is not supported.");
                 }

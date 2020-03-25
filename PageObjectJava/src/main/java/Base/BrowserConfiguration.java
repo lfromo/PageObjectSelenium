@@ -1,6 +1,7 @@
 package Base;
 
 import Support.Support;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -13,38 +14,47 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.testng.util.Strings;
 
+import javax.annotation.Nullable;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 public class BrowserConfiguration<T extends MutableCapabilities> {
 
     private T configOpts = null;
-    private boolean isRemote = false;
     private String browser;
-    private String url;
+    private URL url;
+    private URL hubAddress;
 
-
-    private final String EDGE = "EDGE";
+    private final String EDGE = "MICROSOFTEDGE";
     private final String CHROME = "CHROME";
-    private final String IE11 = "IE11";
+    private final String IE11 = "INTERNET EXPLORER";
     private final String FIREFOX = "FIREFOX";
     private final String REMOTE = "REMOTE";
 
 
-    public BrowserConfiguration(String browserName, String baseUrl){
+    public BrowserConfiguration(String browserName, String baseUrl) throws MalformedURLException{
         this.browser = browserName.toUpperCase();
-        this.url = baseUrl;
+        this.url = new URL(baseUrl);
     }
 
-    public BrowserConfiguration(T browserConfigurationOptions, String baseUrl){
-        this(browserConfigurationOptions, baseUrl, false);
+    public BrowserConfiguration(String hubUrl, String baseUrl, Map<String, ?> capabilities) throws MalformedURLException{
+        this.hubAddress = new URL(hubUrl);
+        this.url = new URL(baseUrl);
+        configOpts = (T) new MutableCapabilities(capabilities);
+        this.browser = getInstanceOf(configOpts);
     }
 
-    public BrowserConfiguration(T browserConfigurationOptions, String baseUrl, boolean isRemote){
-        this.browser = getInstanceOf(browserConfigurationOptions);
+    public BrowserConfiguration(T browserConfigurationOptions, String hubUrl, String baseUrl) throws MalformedURLException {
+        this.browser = Strings.isNullOrEmpty(browserConfigurationOptions.getBrowserName()) ? getInstanceOf(browserConfigurationOptions)
+                : browserConfigurationOptions.getBrowserName().toUpperCase();
         this.configOpts = browserConfigurationOptions;
-        this.url = baseUrl;
-        this.isRemote = isRemote;
+        this.url = new URL(baseUrl);
+        this.hubAddress = new URL(hubUrl);
     }
 
 
@@ -66,13 +76,13 @@ public class BrowserConfiguration<T extends MutableCapabilities> {
         WebDriver drv;
         boolean areThereConfigOptions = Objects.nonNull(configOptions);
 
-        if(isRemote && !areThereConfigOptions)
-            throw new WebDriverException("configuration options are required for a remote web driver");
+        if(Objects.nonNull(hubAddress) && !areThereConfigOptions)
+            throw new WebDriverException("Configuration options are required for a remote web driver");
 
         try{
             switch (this.browser){
                 case REMOTE:
-                    drv = new RemoteWebDriver(configOptions);
+                    drv = new RemoteWebDriver(hubAddress, configOptions);
                     break;
                 case EDGE:
                     drv = areThereConfigOptions ? new EdgeDriver((EdgeOptions) configOptions) : new EdgeDriver();
@@ -92,11 +102,11 @@ public class BrowserConfiguration<T extends MutableCapabilities> {
                     throw new WebDriverException(String.format("WebDriver for %s is not supported.%s", this.browser, msg));
             }
 
-            //TODO Consider removing the next two code lines and just return the driver.
+            // TODO Consider removing the next two code lines and just return the driver.
             // However, a proper environment is not defined just by the browser but also by the initial URL
             // but this may cause problems with remote web drivers testing mobile applications (i.e. Appium).
 
-            drv.manage().window().maximize();
+            //drv.manage().window().maximize();
             drv.navigate().to(this.url);
             return drv;
 
@@ -108,17 +118,17 @@ public class BrowserConfiguration<T extends MutableCapabilities> {
     }
 
     private <T extends MutableCapabilities> String getInstanceOf(T configOptions) {
-        if(isRemote)
+        if(Objects.nonNull(hubAddress))
             return REMOTE;
-        if(configOptions instanceof ChromeOptions)
+        if(configOptions instanceof ChromeOptions || configOptions.getBrowserName().equalsIgnoreCase(CHROME))
             return CHROME;
-        if(configOptions instanceof InternetExplorerOptions)
+        if(configOptions instanceof InternetExplorerOptions || configOptions.getBrowserName().equalsIgnoreCase(IE11))
             return IE11;
-        if(configOptions instanceof EdgeOptions)
+        if(configOptions instanceof EdgeOptions || configOptions.getBrowserName().equalsIgnoreCase(EDGE))
             return EDGE;
-        if(configOptions instanceof FirefoxOptions)
+        if(configOptions instanceof FirefoxOptions || configOptions.getBrowserName().equalsIgnoreCase(FIREFOX))
             return FIREFOX;
-        throw new WebDriverException("The provided config options are for a non-supported browser");
+        throw new WebDriverException("The provided config options are not supported");
     }
 
 }

@@ -1,15 +1,20 @@
 package Base;
 
 import Support.Support;
+import org.apache.commons.collections.map.HashedMap;
+import org.openqa.selenium.MutableCapabilities;
 import org.testng.*;
+import org.testng.reporters.jq.ReporterPanel;
+import org.testng.util.Strings;
 
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
+import java.util.*;
 
 public class DefaultListener implements ITestListener {
 
@@ -21,6 +26,8 @@ public class DefaultListener implements ITestListener {
     @Override
     public void onTestSuccess(ITestResult result) {
         Support.LOGGER.info(String.format("--->TEST '%s' PASSED", result.getName()));
+        List<String> tstRst = Reporter.getOutput(result);
+        Reporter.setCurrentTestResult(result);
     }
 
     @Override
@@ -29,6 +36,7 @@ public class DefaultListener implements ITestListener {
         Support.takeScreenshot();
         addScreenshotsToReport(result);
         Support.clearScreenshotsList();
+        Reporter.setCurrentTestResult(result);
 
         //Ensures a clean start in case of fatal failures happen in the tested web app.
         TestConfiguration.getDriver().navigate().to(TestConfiguration.getURL());
@@ -37,22 +45,41 @@ public class DefaultListener implements ITestListener {
     @Override
     public void onTestSkipped(ITestResult result) {
         Support.LOGGER.warn(String.format("--->TEST '%s' SKIPPED", result.getName()));
+        Reporter.setCurrentTestResult(result);
     }
 
     @Override
     public void onTestFailedButWithinSuccessPercentage(ITestResult result) {
         Support.LOGGER.warn(String.format("--->TEST '%s' FAILED BUT WITHIN SUCCESS PERCENTAGE", result.getName()));
+        Reporter.setCurrentTestResult(result);
     }
 
     @Override
     public void onStart(ITestContext context) {
         String browser = context.getCurrentXmlTest().getParameter("Browser");
         String url = context.getCurrentXmlTest().getParameter("Url");
-        BrowserConfiguration _configuration = new BrowserConfiguration(browser, url);
+        String hubUrl = context.getCurrentXmlTest().getParameter("HubUrl");
+        String capabilities = context.getCurrentXmlTest().getParameter("Capabilities");
+
+        BrowserConfiguration _configuration = null;
+
+        try {
+            if(Strings.isNullOrEmpty(hubUrl))
+                _configuration = Strings.isNullOrEmpty(capabilities) ?
+                        new BrowserConfiguration(browser, url) :
+                        new BrowserConfiguration(browser, url, setCapabilities(capabilities));
+            else
+                _configuration = new BrowserConfiguration(hubUrl, url, setCapabilities(capabilities));
+        } catch (MalformedURLException e) {
+            Support.LOGGER.fatal("An invalid URL has been provided", e);
+        }
         TestConfiguration.setDriver(_configuration.getDriver());
         TestConfiguration.setUrl(url);
         Support.LOGGER.info("*******STARTING TEST SUITE '" + context.getName().toUpperCase() +
                 "' ON " + TestConfiguration.getBrowserName().toUpperCase() + " DRIVER*******");
+        if(Objects.nonNull(capabilities))
+            setCapabilities(capabilities).forEach((parameter, value) ->
+                    Support.LOGGER.info(String.format("%s : %s",parameter, value)));
     }
 
     @Override
@@ -62,6 +89,20 @@ public class DefaultListener implements ITestListener {
                 "' ON " + TestConfiguration.getBrowserName().toUpperCase() + " DRIVER*******");
     }
 
+
+    private Map<String,?> setCapabilities(String capabilities){
+        Map caps = new HashMap<String,String>();
+        String[] allCapturedCaps = capabilities.split(";");
+        try{
+            Arrays.stream(allCapturedCaps).forEach(cap -> {
+                String[] keyValuePair = cap.split(":");
+                caps.put(keyValuePair[0], keyValuePair[1]);
+            });
+            return caps;
+        }catch(Exception ex){
+            throw new RuntimeException("There was an error parsing the provided capabilities", ex.getCause());
+        }
+    }
 
     private void addScreenshotsToReport(ITestResult result){
         String screenshotFileName = TestConfiguration.getBrowserName().toUpperCase() + "_" + result.getName();

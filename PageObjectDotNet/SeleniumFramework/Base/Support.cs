@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using System;
 using System.IO;
 using System.Reflection;
@@ -76,6 +77,20 @@ namespace SeleniumFramework.Base
             var obj = js.ExecuteScript(@"return arguments[0].textContent;", elementToExtractText);
             return obj.ToString().Trim();
         }
+
+        public static void HoverOverWebElement(this IWebDriver driver, IWebElement element) 
+        {
+            ScrollToWebElement(driver, element);
+            var act = new Actions(driver);
+            act.MoveToElement(element).Build().Perform();
+        }
+
+        public static void ScrollToWebElement(this IWebDriver driver, IWebElement element) 
+        {
+            var js = Scripts(driver);
+            js.ExecuteScript("arguments[0].scrollIntoView();", element);
+        }
+
 
     }
 }

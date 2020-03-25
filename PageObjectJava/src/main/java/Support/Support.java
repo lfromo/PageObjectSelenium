@@ -4,6 +4,7 @@ import Base.TestConfiguration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import ru.yandex.qatools.ashot.AShot;
 import ru.yandex.qatools.ashot.Screenshot;
 import ru.yandex.qatools.ashot.shooting.ShootingStrategies;
@@ -39,6 +40,28 @@ public class Support {
         Screenshot shot = Objects.isNull(webItem) ? shotInstance.takeScreenshot(TestConfiguration.getDriver()) :
                 shotInstance.takeScreenshot(TestConfiguration.getDriver(), webItem);
         SAVED_SCREENSHOTS.add(shot);
+    }
+
+    public static void HoverOverWebElementsThenClickOver(WebElement finalWebItem, WebElement... orderedWebItems)
+    {
+        Actions act = new Actions(TestConfiguration.getDriver());
+
+        for (WebElement itm : orderedWebItems)
+            act = act.moveToElement(itm);
+
+        act.click(finalWebItem).build().perform();
+    }
+
+    public static void hoverOverWebElement(WebElement element){
+        scrollToWebElement(element);
+        Actions act = new Actions(TestConfiguration.getDriver());
+        act.moveToElement(element).build().perform();
+    }
+
+    public static void scrollToWebElement(WebElement element)
+    {
+        JavascriptExecutor executor = getJavaScriptExecutor();
+        executor.executeScript("arguments[0].scrollIntoView();", element); //Necessary for Firefox
     }
 
     public static List<Screenshot> getStoredScreenshots(){
